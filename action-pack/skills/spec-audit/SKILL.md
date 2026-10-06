@@ -1,8 +1,8 @@
 ---
 name: spec-audit
-description: Verify that what was built matches what was specified, adversarially and from outside the build. Use after a feature is built and tested, to produce a traceability matrix and drift report. Never verifies its own build output: run it as a separate pass with no build context.
+description: "Verify that what was built matches what was specified, adversarially and from outside the build. Use after a feature is built and tested, to produce a traceability matrix and drift report. Never verifies its own build output: run it as a separate pass with no build context."
 metadata:
-  version: "1.0.0"
+  version: "2.0.0"
   publisher: WhiteFish Creative
   source: https://github.com/whitefish-creative-ltd/spec-driven-development
 ---

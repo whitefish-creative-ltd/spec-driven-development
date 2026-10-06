@@ -52,6 +52,10 @@ is drift even when the guess is good, because nobody chose it and nobody recorde
 applies to agents and humans equally. The right move is: surface the gap, get it decided, write
 the decision in the decision log, continue.
 
+**Decisions already taken are in `docs/spec/decision-log.md`.** Every decision in the project has
+its number and its line there. Check it before treating something as unspecified, and before
+"fixing" something that looks wrong: it may be deliberate.
+
 The wrong move is to pick the plausible option and keep going. That's how a spec quietly becomes
 whatever happened to get built.
 

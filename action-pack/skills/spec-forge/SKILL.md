@@ -2,7 +2,7 @@
 name: spec-forge
 description: Turn a vague feature request into a specification by interrogation, not transcription. Use when someone describes something they want built in loose terms and you need to surface the decisions hidden inside it before any code is written. Produces a spec document and a standalone not-building register. Challenges vague answers rather than recording them.
 metadata:
-  version: "1.0.0"
+  version: "2.0.0"
   publisher: WhiteFish Creative
   source: https://github.com/whitefish-creative-ltd/spec-driven-development
 ---

@@ -29,7 +29,9 @@
 
 ## 2. When you hit a decision that isn't specified
 
-Do not decide it silently. Flag it, get it decided, log it in `decisions/`, then continue.
+Do not decide it silently. Flag it, get it decided, log it in `docs/spec/decision-log.md`, then
+continue. Every decision we have taken is listed there by number; check it first, because the
+answer may already exist.
 
 This has bitten us. See decision D004: the tenant toggle's mid-session behaviour was left
 unspecified, someone made a reasonable assumption, and it became a known security gap that we now

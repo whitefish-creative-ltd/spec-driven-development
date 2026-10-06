@@ -1,13 +1,13 @@
 # The Spec-Driven Development Action Pack
 
-Eleven templates. Every one is a markdown file. That is the entire toolchain.
+Twelve templates. Every one is a markdown file. That is the entire toolchain.
 
 You do not need a CLI, a subscription, or a skill to work this way. If a vendor has told you
 otherwise, they were selling something. Copy the blanks, fill them in, keep them in the repo next
 to the code they govern.
 
 **This is not a Claude thing.** The worked examples show Claude Code because that is what we build
-with. Nothing in the pack is tied to it. All eleven templates are plain markdown with no tool in
+with. Nothing in the pack is tied to it. All twelve templates are plain markdown with no tool in
 them at all, so the method works exactly the same on Codex, Cursor, Copilot, Gemini CLI, Windsurf,
 or whatever your team has settled on this quarter, and it works with no agent whatsoever on a
 codebase written entirely by people. The six skills are portable too: they are `SKILL.md` files
@@ -20,9 +20,9 @@ those filenames are listed further down.
 ```
 sdd-action-pack/
 ├── README.md      <- this file. The layout, the loop, and how to wire it to your agent
-├── templates/     <- the eleven blanks. This is the method. Copy these into your repo
-├── examples/      <- the same eleven, filled in for one worked feature, to read not to copy
-└── skills/        <- six optional agent skills, SKILL.md, and a README about trusting them
+├── templates/     <- the twelve blanks. This is the method. Copy these into your repo
+├── examples/      <- the same twelve, filled in for one worked feature, to read not to copy
+└── skills/        <- six optional agent skills, an update checker, and a README about trusting them
 ```
 
 `templates/` is the pack. Everything else exists to explain it. If you only ever open one folder,
@@ -41,6 +41,8 @@ your-project/
 │       ├── constitution.md              <- 11  the standing rules everything is built under
 │       ├── definition-of-done.md        <- 09  the gate, agreed once, applied to every feature
 │       ├── decision-log.md              <- 06  the overview: every decision, one line each
+│       ├── INDEX.md                     <- the map: every feature, with its folder
+│       ├── coordinator-notes.md         <- where the next coordinator picks up
 │       │
 │       ├── features/
 │       │   ├── 001-user-login/
@@ -76,7 +78,8 @@ The definition of done is the standard every feature is measured against, agreed
 because a gate you restate per feature is a gate you renegotiate every time you approach it. The
 decision log is an overview, described below. All three are the same on Tuesday as they are for
 feature 007, which is exactly why they are not in a feature folder. What is *not* up there is any
-description of the system you are building.
+description of the system you are building. Two working files sit beside them, the index and the
+coordinator's notes, and neither of those is a spec either; both are described below.
 
 **Two logs, and they answer different questions.** The decision log records *why* a choice was
 made. The change and drift register records *what moved* in the spec. Drift only means anything
@@ -87,9 +90,44 @@ Decisions are the other way round, because their whole value is that someone els
 copy in the feature folder is the working log, written as you build. The copy at the top is the
 overview: one line per decision across the project, with the date, the decision in a sentence, and
 the feature folder holding the full entry. Anything that belongs to no single feature, the
-password hashing algorithm, the error format, gets written out in full up there instead. The test
-is simple. If a future feature could be affected by it, it needs a line in the overview, and if
-you cannot be bothered to add the line then the decision was probably not worth logging.
+password hashing algorithm, the error format, gets written out in full up there instead.
+
+**Decision numbers are project-wide, and the overview hands them out.** Every decision takes the
+next free number in `docs/spec/decision-log.md`, and gets its line there when it is taken, even
+when the full entry lives in a feature folder. So D004 means one decision wherever it is
+mentioned, in a spec, a task, a drift entry or an agent prompt, and the overview is the one place
+to look for every decision the project has made. The constitution points at it for that reason.
+If you cannot be bothered to add the line, the decision was probably not worth logging.
+
+**`INDEX.md` is the map, and it holds nothing else.** One line per feature, with its folder. It
+exists so that whoever hands out the work, a person or a coordinating agent, can pick the exact
+spec files a build agent needs without opening every folder to find them. Agents that are told
+what to read read less, and most of the cost of an agent is reading. Decisions are not in it:
+they already have their list, the overview decision log, and two lists of the same thing drift
+apart. The decision numbers for an agent prompt come from there. It is short enough not to need a
+numbered template:
+
+```markdown
+# Spec index
+
+One line per feature, with its folder. Pointers only: the content lives in the files they
+point at. Decisions are in `decision-log.md`, not here.
+
+| ID | Feature, one line | Folder |
+|---|---|---|
+| 001 | User login: first-party email and password | `features/001-user-login/` |
+| 002 | Password reset | `features/002-password-reset/` |
+```
+
+Keeping it current is part of the work it points at, not a tidy-up for later. When you make a
+feature folder, add the feature's line in the same commit. When a feature is retired or merged
+into another, its line says so rather than disappearing, so an old reference still leads
+somewhere.
+
+**`coordinator-notes.md` is for when things go sideways.** A coordinating session that dies, or is
+replaced by a fresh one, leaves the next one nothing but the repository. `tasks.md` says which
+tasks are done. This note says the rest: which agents are out and on what, which questions are
+waiting on a person, and what comes next. A handful of lines that describe now, not a history.
 
 **It is `docs/spec/`, not `spec/`.** A top-level `spec/` is already the test directory in Ruby,
 JavaScript and a dozen other ecosystems, and you do not want your contract fighting your test
@@ -126,10 +164,11 @@ review when it changes.
 Read `docs/spec/constitution.md` before doing anything. It is the source of truth for the
 standing rules of this repository and it overrides anything in this file.
 
-When working on a feature, read every file in that feature's folder under
-`docs/spec/features/` first. The feature spec is the contract and `not-building.md` is
-binding. If a request conflicts with either, stop and say so rather than deciding for
-yourself.
+When working on a feature, read the files in that feature's folder under
+`docs/spec/features/` that you have been pointed at, or every file in it if you were not
+given a list, and no other feature's folder. The feature spec is the contract and
+`not-building.md` is binding. If a request conflicts with either, stop and say so rather
+than deciding for yourself.
 ```
 
 That last sentence is the one that earns its place. Left to itself an agent resolves a conflict
@@ -152,7 +191,7 @@ principle survives the renaming: one canonical constitution in the repo, every t
 it, nothing important living only inside a vendor's config file. Run several agents and they all
 point at the same file, which is the entire reason the constitution is tool-agnostic.
 
-## The eleven templates
+## The twelve templates
 
 | # | Template | Where it lives | Use it when |
 |---|---|---|---|
@@ -167,6 +206,7 @@ point at the same file, which is the entire reason the constitution is tool-agno
 | 09 | Definition of Done | `docs/spec/definition-of-done.md` | Before you say the word "done". Agreed once, applied to every feature. |
 | 10 | Skill Audit Checklist | `docs/spec/audits/[skill].md` | Before you run anyone's skill. Including these ones. |
 | 11 | The Constitution | `docs/spec/constitution.md` | Once per project. The standing rules everything else is built under. |
+| 12 | Agent Prompt | Nowhere: it is what you hand a build agent | Every time an agent builds. Names exactly what it reads, runs and reports. |
 
 ## How to actually use it
 
@@ -188,9 +228,16 @@ reason; then the task breakdown. If a task cannot be verified on its own, it is 
 
 **While building.** Point the agent at the constitution and at this feature's folder. Every
 decision nobody had already made goes in the feature's `decision-log.md` as it is taken, not
-reconstructed afterwards, and anything a later feature could trip over gets a line in the overview
-at `docs/spec/decision-log.md` at the same time. Anything that moves the spec goes in `change-and-drift.md`, which keeps decided
-change and silent drift apart, and that separation is the whole point of the document.
+reconstructed afterwards, under the next free number from the overview at
+`docs/spec/decision-log.md`, which gets the decision's line at the same time. Anything that moves
+the spec goes in `change-and-drift.md`, which keeps decided change and silent drift apart, and
+that separation is the whole point of the document.
+
+If agents do the building, give one agent one feature: its tasks in order, four or five at most,
+with template 12 filled in. That names the exact spec files, decisions and code it reads, the
+tests it runs, when it stops, and the ten-to-fifteen-line report it hands back. The reasons, and
+what they saved when measured, are in `skills/spec-build/SKILL.md` under "Running build agents
+efficiently". They hold whether or not you use the skill.
 
 **Before you call it done.** Someone who did not build it fills in `traceability.md`, mapping
 every criteria to the test that proves it. Unmapped criteria is the finding. Then run the feature
@@ -198,7 +245,7 @@ against `docs/spec/definition-of-done.md`. Both are gates, and a gate you skip w
 a gate.
 
 **Before you run anyone's agent skill.** Copy template 10 into `docs/spec/audits/` with the
-skill's name and the date, and work through it. That includes the six skills in this pack.
+skill's name and the date, and work through it. That includes the skills in this pack.
 
 ## How they fit together
 
@@ -215,6 +262,9 @@ skill's name and the date, and work through it. That includes the six skills in 
 05 Task Breakdown ----------+
       |
       v
+12 Agent Prompt     (one per build agent, four or five tasks each)
+      |
+      v
    [ build ]  ------>  06 Decision Log
       |    ^
       |    |  governed throughout by
@@ -229,8 +279,8 @@ skill's name and the date, and work through it. That includes the six skills in 
 11 and 09 happen once per project: the standing rules, and the standard everything is measured
 against. 01, 03, 04, 05 and 08 happen once per feature. 07 is a living document inside the feature
 folder. 06 is living too, and lives in both places, the working log with the feature and the
-overview at the top. 08 and 09 are gates. 02 is for the occasional epic. 10 you reach for before
-running anyone's skill.
+overview at the top. 08 and 09 are gates. 12 is written each time an agent builds. 02 is for
+the occasional epic. 10 you reach for before running anyone's skill.
 
 ## Rules
 
@@ -249,10 +299,10 @@ running anyone's skill.
 
 ## The worked examples
 
-Every template ships with a filled-in example in `examples/`. Ten of them describe the same
+Every template ships with a filled-in example in `examples/`. Eleven of them describe the same
 feature, user login for a product called Kestrel, carried the whole way through: specced,
-decomposed, built, drifted, verified, audited. Read those ten in order and you have the entire
-method. The eleventh, the Skill Audit Checklist example, necessarily uses a different fixture: it
+decomposed, built, drifted, verified, audited. Read those eleven in order and you have the entire
+method. The odd one out, the Skill Audit Checklist example, necessarily uses a different fixture: it
 audits a fictional third-party skill (`spec-tasker`) rather than the login feature, because you
 can't demonstrate auditing someone else's skill on a feature you built yourself.
 
@@ -262,16 +312,19 @@ To see the layout above with the words filled in: put `examples/11` at `docs/spe
 and `examples/09` at `docs/spec/definition-of-done.md`, drop `examples/01`, `03`, `04`, `05`, `06`,
 `07` and `08` into `docs/spec/features/001-user-login/` under the filenames in the tree, and
 `examples/10` into `docs/spec/audits/`. That is a finished feature, start to audit, in the shape
-your own repo should take.
+your own repo should take. `examples/12` lives nowhere, because a prompt is not a file in the
+repo: it is what the coordinator handed the agent that built LOGIN-03 to LOGIN-05, and what came
+back.
 
 ## The skills
 
 `skills/` holds six optional skills, one per stage of the loop plus one for bringing an existing
-codebase into it. Each is a folder containing a `SKILL.md`, which is the open Agent Skills
-standard, so they are not Claude-only: copy the folders into whichever skills directory your agent
-reads. At the time of writing that is `.claude/skills/` for Claude Code, `.agents/skills/` for
-Codex, and Cursor reads `.cursor/skills/` as well as both of those. Those paths move as often as
-the instruction filenames do, so check your tool's current docs.
+codebase into it, and `spec-update`, which checks whether they are the latest version. Each is a
+folder containing a `SKILL.md`, which is the open Agent Skills standard, so they are not
+Claude-only: copy the folders into whichever skills directory your agent reads. At the time of
+writing that is `.claude/skills/` for Claude Code, `.agents/skills/` for Codex, and Cursor reads
+`.cursor/skills/` as well as both of those. Those paths move as often as the instruction filenames
+do, so check your tool's current docs.
 
 They automate the repetitive parts. They do not confer the discipline, and you can run the whole
 method without them. Read `skills/README.md` before you run any of them, and put them through

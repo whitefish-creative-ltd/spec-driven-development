@@ -1,6 +1,8 @@
 # Decision Log: [feature or project]
 
 **Status:** Living document, append only. Entries are superseded, never edited.
+**Numbering:** project-wide. Take the next free number from `docs/spec/decision-log.md` and add
+the decision's line there when you take it, so a number means one decision wherever it appears.
 
 > The code shows what happens. It rarely shows why. The why is what stops the next person,
 > or the next agent, cheerfully "fixing" something that was deliberate.

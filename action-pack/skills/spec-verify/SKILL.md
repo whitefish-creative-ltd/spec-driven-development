@@ -2,7 +2,7 @@
 name: spec-verify
 description: Write tests that assert acceptance criteria rather than exercise implementation. Use after a task is built, to prove each criteria holds. Tests behaviour not mechanism, includes negative cases for prohibitions, and checks that each test would fail if the behaviour broke.
 metadata:
-  version: "1.0.0"
+  version: "2.0.0"
   publisher: WhiteFish Creative
   source: https://github.com/whitefish-creative-ltd/spec-driven-development
 ---

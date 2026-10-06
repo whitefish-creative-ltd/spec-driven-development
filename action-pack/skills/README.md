@@ -1,16 +1,18 @@
 # The spec-driven skills
 
 Five skills, one per stage of the loop, plus `spec-recover`, which brings an existing codebase
-*into* the loop. They compose, and each is useful alone.
+*into* the loop. They compose, and each is useful alone. A seventh, `spec-update`, is not part of
+the method: it checks whether the other six are the latest version.
 
 | Skill | Does |
 |---|---|
 | `spec-forge` | Interview a vague request into a spec plus a not-building register |
 | `spec-decompose` | Break the spec into independently verifiable tasks |
-| `spec-build` | Implement one task, refusing out-of-scope work |
+| `spec-build` | Implement a feature's tasks one at a time, refusing out-of-scope work |
 | `spec-verify` | Write tests that assert the criteria, including negative cases |
 | `spec-audit` | Compare specified versus built versus proven, adversarially |
 | `spec-recover` | Recover a spec-shaped account of an existing codebase, then validate it against the code |
+| `spec-update` | Check the installed skills against the latest release, and say what changed |
 
 The first five drive the forward loop: spec, decompose, build, verify, audit. `spec-recover` runs
 the same discipline backward: for a brownfield or inherited system that never had a spec, it
@@ -19,7 +21,7 @@ recovers one from the code so you can start speccing changes against something r
 ## Installing them
 
 Each skill is a folder with a `SKILL.md` in it, which is the open Agent Skills format, so they are
-not Claude-only. Copy the six folders into whichever skills directory your agent reads. At the
+not Claude-only. Copy the folders into whichever skills directory your agent reads. At the
 time of writing that is `.claude/skills/` for Claude Code, `.agents/skills/` for Codex, and
 `.cursor/skills/` for Cursor, which also reads the other two. Those paths move, so check your
 tool's current docs.
@@ -87,15 +89,21 @@ It will refuse to write a task that cannot be verified on its own, and it will f
 no task points at. Both refusals are the skill working, not the skill being awkward.
 
 **3. Build, one task at a time.** This is the step people get wrong by handing over the whole
-feature at once. Give it exactly one task.
+feature as one job. One agent takes the feature, but it builds the tasks one at a time, in order,
+each held to its own scope, and no more than four or five of them before a fresh agent takes over.
+Fill in Template 12, the agent prompt, and hand it that.
 
-> Use spec-build for task 001-01 in `docs/spec/features/001-user-login/tasks.md`. The constitution
-> is at `docs/spec/constitution.md`.
+> Use spec-build for tasks 001-01 to 001-04 in `docs/spec/features/001-user-login/tasks.md`.
+> Read only the files listed in this prompt: [the reading list from Template 12].
 
-It reads the constitution, the task, the feature spec and the not-building register before it
-writes anything, which is how it knows where the edges are. If you then ask it mid-task for a
-"remember me" box that is on the not-building register, it is supposed to refuse and name the
-register entry. Repeat for 001-02, 001-03, and so on.
+It reads the constitution, the tasks, the feature spec and the not-building register before it
+writes anything, which is how it knows where the edges are, and it reads only what the prompt
+names. If you then ask it mid-task for a "remember me" box that is on the not-building register,
+it is supposed to refuse and name the register entry. When it hands back, the next tasks go to a
+fresh agent along with its report.
+
+How to run build agents without burning through tokens, and the measurements behind it, is in
+`spec-build/SKILL.md` under "Running build agents efficiently". Read it before your first build.
 
 **4. Prove it.**
 
@@ -123,24 +131,26 @@ whole pack, and it is the easiest mistake in it to make.
 | `spec-recover` | the repository, read-only | a recovered spec document | Once, on inherited code |
 | `spec-forge` | you, in an interview | problem brief, feature spec, not-building register | Once per feature |
 | `spec-decompose` | the feature spec | the task breakdown | Once per feature |
-| `spec-build` | constitution, one task, feature spec, not-building register | the code for that task | Once per task |
+| `spec-build` | constitution, and the tasks, spec files, decisions and code its prompt names | the code for those tasks, and a short hand-back report | Once per feature, four or five tasks per agent |
 | `spec-verify` | the feature spec | the tests | Once per feature, on a disposable checkout |
 | `spec-audit` | spec, code, tests | the traceability matrix | Once per feature, **in a fresh session** |
 
 ## Provenance
 
 Template 10's first question is "who publishes it?", so these answer it, rather than being copied
-`SKILL.md` files with no author. All six are:
+`SKILL.md` files with no author. All seven are:
 
 - **Published by** WhiteFish Creative (James Studdart), as part of the SDD Action Pack.
-- **Version** 1.0.0, stated in each `SKILL.md` under `metadata.version`.
+- **Version** 2.0.0, stated in each `SKILL.md` under `metadata.version`. What changed between
+  versions is in `CHANGELOG.md` in the repository.
 - **Canonical source:** the GitHub repository at
   `github.com/whitefish-creative-ltd/spec-driven-development`, where every version is a tagged
   release. The method itself is written up at `whitefishcreative.co.uk/spec-driven-development/`.
   They ship inside the pack; there is no separate registry listing to trust or mistrust.
 - **Licence:** MIT, in `LICENSE` in the repository and the pack.
-- **Update policy:** versioned with the pack. Re-audit against Template 10 on any change, the
-  version you read is the version you run.
+- **Update policy:** versioned with the pack. Run `spec-update`, or look at the releases page, to
+  see whether yours are current. Re-audit against Template 10 on any change, the version you
+  read is the version you run.
 
 That's the provenance a reader needs to make the trust decision the checklist asks for. It doesn't
 substitute for reading them.
@@ -155,7 +165,10 @@ are built to pass it:
 - **Pure markdown.** No bundled scripts, no executables, nothing to compile.
 - **No load-time command execution.** None of the `!`-style dynamic context that runs before the
   agent's own reasoning engages.
-- **No network calls.** Nothing phones home. No telemetry, including ours.
+- **No network calls.** Nothing phones home. No telemetry, including ours. The one exception is
+  `spec-update`, whose whole job is to make one: a single read-only request to the pack's public
+  GitHub releases, only when you run it, stated at the top of the file. If you don't want it,
+  don't install it; the other six never touch the network.
 - **No credential or environment access.** Nothing outside the working repository. `spec-recover`
   reads the repo you point it at, read-only, skips secret files, and its orientation step uses
   standard read-only file listing, it writes nothing to the code and sends nothing off the machine.
@@ -167,16 +180,16 @@ skill.
 
 ## What passing the checklist does and doesn't mean
 
-These six clear the *static* packaging checks: one markdown file each, no bundled executables, no
-`!`-style load-time execution, no network calls, no credential or environment access, each
-readable in a few minutes. That is necessary, not sufficient. Template 10 also asks for a
-scratch-repo run with the tool calls watched, and a re-audit on update, and, above all, it asks
-you to *read them yourself*. A markdown-only skill can still contain a prompt injection or steer an
-agent into destructive tool use through the agent's own legitimate permissions; removing scripts
-and network directives shrinks the attack surface, it does not make instructions trustworthy. So:
-read them, and ideally have someone who didn't write them read them too. As of now that non-author
-read has not happened, the skills pass the static checks by the author's own scan, which by the
-pack's own argument is not the same as passing.
+These seven clear the *static* packaging checks: one markdown file each, no bundled executables, no
+`!`-style load-time execution, no network calls beyond `spec-update`'s one, no credential or
+environment access, each readable in a few minutes. That is necessary, not sufficient. Template 10
+also asks for a scratch-repo run with the tool calls watched, and a re-audit on update, and, above
+all, it asks you to *read them yourself*. A markdown-only skill can still contain a prompt injection
+or steer an agent into destructive tool use through the agent's own legitimate permissions; removing
+scripts and network directives shrinks the attack surface, it does not make instructions
+trustworthy. So: read them, and ideally have someone who didn't write them read them too. As of now
+that non-author read has not happened, the skills pass the static checks by the author's own scan,
+which by the pack's own argument is not the same as passing.
 
 ## They are not required
 

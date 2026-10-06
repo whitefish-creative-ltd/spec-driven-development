@@ -2,7 +2,7 @@
 name: spec-decompose
 description: Break a specification into tasks that can each be verified independently. Use after a spec exists and before building, to turn requirements into atomic units of work that each map to specific acceptance criteria. Refuses to produce tasks that cannot be verified on their own.
 metadata:
-  version: "1.0.0"
+  version: "2.0.0"
   publisher: WhiteFish Creative
   source: https://github.com/whitefish-creative-ltd/spec-driven-development
 ---
