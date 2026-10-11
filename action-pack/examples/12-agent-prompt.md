@@ -28,6 +28,7 @@ LOGIN-01 and LOGIN-02 are done. The previous agent's report:
 
 Standing rules:
 - `docs/spec/constitution.md`
+- Operating rules: `docs/spec/constitution.md` §9. Don't retype them here.
 
 Spec files for this feature, picked from `docs/spec/INDEX.md`:
 - `docs/spec/features/001-user-login/tasks.md`, LOGIN-03 to LOGIN-05
@@ -39,7 +40,7 @@ Decisions that bind this work, picked from `docs/spec/decision-log.md`:
 - D004 toggle not enforced mid-session, same file
 - D005 password auth defaults to off for existing tenants, same file
 
-Code:
+Code, from the briefs of LOGIN-03 to LOGIN-05:
 - `auth/login.py`, `login()` only
 - `auth/limiter.py`
 - `auth/session_service.py`
@@ -63,6 +64,7 @@ happens once, after merging.
 
 - the tasks above are done;
 - the tests have failed twice in a row;
+- you have made 120 tool calls;
 - you meet a decision the spec didn't make, or you would need a file not listed here;
 - anything you are about to add appears in `not-building.md`. NB6, "remember me", is the one
   that keeps coming up.
@@ -75,6 +77,8 @@ About 10 to 15 lines. Nothing else.
 - Commits: [hash, one line each]
 - Open questions: [one line each]
 - Not decided by the spec: [what you met, and what you did instead of deciding it]
+- Files touched: [paths]
+- Wrong pointers: [any brief entry that was missing or had moved, or "none"]
 ```
 
 What came back:
@@ -91,7 +95,10 @@ Open questions:
 Not decided by the spec:
   - Whether a password reset clears an active lockout. Nothing says so. I left the lock in
     place and did not add a clear. Needs a decision.
+Files touched: auth/limiter.py, auth/login.py, auth/reset.py, auth/session_service.py,
+  tenants/settings.py, and their three test files
+Wrong pointers: none
 ```
 
-Eleven lines. Both questions went to the coordinator to decide, and the whole suite ran once,
+Fourteen lines. Both questions went to the coordinator to decide, and the whole suite ran once,
 after the merge.

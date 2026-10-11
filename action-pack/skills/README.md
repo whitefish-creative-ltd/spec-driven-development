@@ -1,13 +1,15 @@
 # The spec-driven skills
 
-Five skills, one per stage of the loop, plus `spec-recover`, which brings an existing codebase
-*into* the loop. They compose, and each is useful alone. A seventh, `spec-update`, is not part of
-the method: it checks whether the other six are the latest version.
+Five skills, one per stage of the loop, plus `spec-orchestrate`, which hands the build stage out
+to agents, and `spec-recover`, which brings an existing codebase *into* the loop. They compose,
+and each is useful alone. An eighth, `spec-update`, is not part of the method: it checks whether
+the other seven are the latest version.
 
 | Skill | Does |
 |---|---|
 | `spec-forge` | Interview a vague request into a spec plus a not-building register |
 | `spec-decompose` | Break the spec into independently verifiable tasks |
+| `spec-orchestrate` | Hand tasks to build agents from their briefs, and keep the state in the repo |
 | `spec-build` | Implement a feature's tasks one at a time, refusing out-of-scope work |
 | `spec-verify` | Write tests that assert the criteria, including negative cases |
 | `spec-audit` | Compare specified versus built versus proven, adversarially |
@@ -71,7 +73,10 @@ is a real prompt.
 Now you have something to spec changes against, instead of guessing at a system nobody documented.
 
 **1. Turn the request into a spec.** Make the feature folder first,
-`docs/spec/features/001-user-login/`.
+`docs/spec/features/001-user-login/`. Login is new code, so there is nothing to map. Had it changed
+code that already exists, spec-forge would first have a separate read-only agent draft
+`inventory.md`, every existing behaviour and its `file::function`, and the interview would decide
+where each one goes.
 
 > Use spec-forge. I want first-party login for Kestrel. Write the problem brief to
 > `docs/spec/features/001-user-login/problem-brief.md`, the spec to `feature-spec.md` in the same
@@ -86,12 +91,19 @@ the question that produces the negative tests four steps from here, so answer it
 > `tasks.md` in the same folder.
 
 It will refuse to write a task that cannot be verified on its own, and it will flag any criteria
-no task points at. Both refusals are the skill working, not the skill being awkward.
+no task points at. Both refusals are the skill working, not the skill being awkward. Every task
+also gets a brief: the functions to read, the files it may touch, and the command that proves it.
+That brief is what lets a build agent start without exploring.
 
 **3. Build, one task at a time.** This is the step people get wrong by handing over the whole
 feature as one job. One agent takes the feature, but it builds the tasks one at a time, in order,
 each held to its own scope, and no more than four or five of them before a fresh agent takes over.
-Fill in Template 12, the agent prompt, and hand it that.
+Run the coordinating in its own session:
+
+> Use spec-orchestrate on `docs/spec/features/001-user-login/tasks.md`.
+
+It fills in Template 12 from the briefs and hands each batch to a fresh build agent, on the model
+the tasks call for. Without the skill, fill in Template 12 yourself and hand it over:
 
 > Use spec-build for tasks 001-01 to 001-04 in `docs/spec/features/001-user-login/tasks.md`.
 > Read only the files listed in this prompt: [the reading list from Template 12].
@@ -102,8 +114,9 @@ names. If you then ask it mid-task for a "remember me" box that is on the not-bu
 it is supposed to refuse and name the register entry. When it hands back, the next tasks go to a
 fresh agent along with its report.
 
-How to run build agents without burning through tokens, and the measurements behind it, is in
-`spec-build/SKILL.md` under "Running build agents efficiently". Read it before your first build.
+How to run build agents without burning through tokens is in `spec-orchestrate/SKILL.md`, and
+the measurements behind it are in `spec-build/SKILL.md` under "Working efficiently". Read both
+before your first build.
 
 **4. Prove it.**
 
@@ -129,8 +142,9 @@ whole pack, and it is the easiest mistake in it to make.
 | Skill | Reads | Writes | Run it |
 |---|---|---|---|
 | `spec-recover` | the repository, read-only | a recovered spec document | Once, on inherited code |
-| `spec-forge` | you, in an interview | problem brief, feature spec, not-building register | Once per feature |
-| `spec-decompose` | the feature spec | the task breakdown | Once per feature |
+| `spec-forge` | you, in an interview; existing code, read-only, through a separate agent, if the feature changes it | problem brief, feature spec, not-building register, and an inventory if needed | Once per feature |
+| `spec-decompose` | the feature spec and inventory | the task breakdown, each task with a brief | Once per feature |
+| `spec-orchestrate` | coordinator notes, `tasks.md`, the constitution's operating rules | agent prompts, task status, coordinator notes | In its own session, ended at a boundary |
 | `spec-build` | constitution, and the tasks, spec files, decisions and code its prompt names | the code for those tasks, and a short hand-back report | Once per feature, four or five tasks per agent |
 | `spec-verify` | the feature spec | the tests | Once per feature, on a disposable checkout |
 | `spec-audit` | spec, code, tests | the traceability matrix | Once per feature, **in a fresh session** |
@@ -138,10 +152,10 @@ whole pack, and it is the easiest mistake in it to make.
 ## Provenance
 
 Template 10's first question is "who publishes it?", so these answer it, rather than being copied
-`SKILL.md` files with no author. All seven are:
+`SKILL.md` files with no author. All eight are:
 
 - **Published by** WhiteFish Creative (James Studdart), as part of the SDD Action Pack.
-- **Version** 2.0.0, stated in each `SKILL.md` under `metadata.version`. What changed between
+- **Version** 2.1.0, stated in each `SKILL.md` under `metadata.version`. What changed between
   versions is in `CHANGELOG.md` in the repository.
 - **Canonical source:** the GitHub repository at
   `github.com/whitefish-creative-ltd/spec-driven-development`, where every version is a tagged
@@ -168,19 +182,19 @@ are built to pass it:
 - **No network calls.** Nothing phones home. No telemetry, including ours. The one exception is
   `spec-update`, whose whole job is to make one: a single read-only request to the pack's public
   GitHub releases, only when you run it, stated at the top of the file. If you don't want it,
-  don't install it; the other six never touch the network.
+  don't install it; the other seven never touch the network.
 - **No credential or environment access.** Nothing outside the working repository. `spec-recover`
   reads the repo you point it at, read-only, skips secret files, and its orientation step uses
   standard read-only file listing, it writes nothing to the code and sends nothing off the machine.
 - **Readable in under five minutes each**, and each opens by stating what it touches.
 
-If you can confirm all of that by reading them, and you can, in about twenty-five minutes for the
-set, run them. If you couldn't confirm it for someone else's skill, that's your answer about that
+If you can confirm all of that by reading them, and you can, in about half an hour for the set,
+run them. If you couldn't confirm it for someone else's skill, that's your answer about that
 skill.
 
 ## What passing the checklist does and doesn't mean
 
-These seven clear the *static* packaging checks: one markdown file each, no bundled executables, no
+These eight clear the *static* packaging checks: one markdown file each, no bundled executables, no
 `!`-style load-time execution, no network calls beyond `spec-update`'s one, no credential or
 environment access, each readable in a few minutes. That is necessary, not sufficient. Template 10
 also asks for a scratch-repo run with the tool calls watched, and a re-audit on update, and, above

@@ -2,7 +2,7 @@
 name: spec-forge
 description: Turn a vague feature request into a specification by interrogation, not transcription. Use when someone describes something they want built in loose terms and you need to surface the decisions hidden inside it before any code is written. Produces a spec document and a standalone not-building register. Challenges vague answers rather than recording them.
 metadata:
-  version: "2.0.0"
+  version: "2.1.0"
   publisher: WhiteFish Creative
   source: https://github.com/whitefish-creative-ltd/spec-driven-development
 ---
@@ -13,7 +13,8 @@ metadata:
 specification and a separate list of things you're deliberately not building.
 
 **What this skill touches:** the files it's explicitly asked to create or read in the working
-directory. Nothing else.
+directory, and, when the feature changes existing code, that code, read-only, for the inventory
+(Phase 0). Nothing else.
 
 **What this skill does NOT do:** it runs no scripts, makes no network calls, reads no
 environment variables or credentials, and touches nothing outside the working directory. It is
@@ -34,6 +35,35 @@ instead. "It should be secure" is not an answer you write down, it's a prompt to
 against what, specifically? What must never happen?"
 
 ## Process
+
+### Phase 0: Inventory, only if the feature changes existing code
+
+Skip this for new code in a new place. Otherwise, before the interview, find where the behaviour
+the request touches lives now. Hand this to a separate agent on the mid model, read-only, so the
+interview session never holds the code.
+
+It drafts `inventory.md` in the feature folder: one row per existing behaviour the request could
+change, move, replace or must keep.
+
+| # | Behaviour | `file::function` | Moves to | Notes |
+|---|---|---|---|---|
+| 4 | Discount applied before tax | `billing/invoice.py::apply_discount` | *(decided in the interview)* | |
+
+Rules for the inventory:
+
+- Pointers, not prose. A row says where something is, not how it works.
+- Read only to locate: trace from entry points and the names the request uses, and stop at the
+  function that owns the behaviour.
+- Say which commit it was read at. It is true of that commit, and nothing later.
+- Function names, never line numbers.
+
+The interview then fills "Moves to" one row at a time. Each answer is a decision, and goes in the
+decision log like any other. A row whose answer is "stays as it is" needs a criteria that says so
+("existing saves still load"), because behaviour nobody wrote down is behaviour a refactor is free
+to drop.
+
+This is the most expensive reading in the feature. It is done once, here, instead of by every
+build agent: spec-decompose cites the rows in each task's brief, so builders start from them.
 
 ### Phase 1: Problem before solution
 
@@ -62,6 +92,8 @@ For the feature itself, work through these, challenging vague answers every time
   people do it at once?
 - **The prohibitions.** What must never happen? This is the question nobody volunteers. Ask it
   directly. Never log the what? Never allow the what? Never reveal the what?
+- **What must survive.** If there is an inventory, walk its "stays" rows. Each is a criteria, or
+  it is on the not-building register with a reason.
 - **Done.** How would someone who wasn't in this conversation know it works?
 
 ### Phase 3: Produce the artefacts
@@ -90,3 +122,5 @@ checkable.
 - The not-building register exists as a separate file with a reason per line.
 - There is an explicit "what must never happen" section.
 - No banned vague words survive in any acceptance criteria.
+- If the feature changes existing code, `inventory.md` exists, every row has a "Moves to", and
+  every "stays" row is a criteria or a not-building entry.

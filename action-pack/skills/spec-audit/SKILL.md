@@ -2,7 +2,7 @@
 name: spec-audit
 description: "Verify that what was built matches what was specified, adversarially and from outside the build. Use after a feature is built and tested, to produce a traceability matrix and drift report. Never verifies its own build output: run it as a separate pass with no build context."
 metadata:
-  version: "2.0.0"
+  version: "2.1.0"
   publisher: WhiteFish Creative
   source: https://github.com/whitefish-creative-ltd/spec-driven-development
 ---
@@ -24,6 +24,13 @@ access, nothing outside the working directory. It does not modify source. Plain 
 against a clean checkout, see the one rule. A skill cannot enforce its own session isolation, so
 this is on the operator: if you run it in the same context that built the feature, you have
 defeated the point of it.
+
+**What to give it.** The feature's spec files, the commit range the feature was built in, and the
+whole-suite command from the constitution's operating rules. Not the builder's reading list: the
+audit exists to find what the builder's model of the code missed, and starting from the builder's
+pointers hands it that model. The commit range is the pointer nobody chose. Read the diff first;
+open other code only to trace a criteria or to follow something the diff touches. Stop and report
+at the tool-call budget, as a build agent would.
 
 ---
 
@@ -53,7 +60,9 @@ verifies. Report it.
 
 ### Part 2: Built vs. specified (the drift catch)
 
-Walk the diff, everything that was built. For each piece, ask which criteria it traces back to.
+Walk the diff for the commit range, everything that was built. Check it against each task's Touch
+list first: a file changed outside every Touch list is a finding in its own right. Then, for each
+piece, ask which criteria it traces back to.
 Anything tracing to nothing gets a verdict:
 
 - **Revert:** it's on the not-building register, or it's unwanted. It's drift.

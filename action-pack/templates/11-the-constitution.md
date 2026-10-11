@@ -38,7 +38,7 @@ convenience, and that a human should escalate rather than quietly ignore. Keep t
 everything on it should be something you'd genuinely block a merge over.
 
 - Never commit secrets, keys, or credentials. Not even temporarily. Not even in a branch.
-- Never touch [directories / systems that are off-limits] without explicit sign-off.
+- Never touch anything on the Never touch list in §9 without explicit sign-off.
 - Never weaken a security control to make a test pass.
 - Never add a dependency without flagging it (see §4).
 - [your own]
@@ -121,7 +121,26 @@ Definition of Done.
   can't be read in five minutes gets run.
 - An agent verifying its own output is marking its own homework. Verification is a separate pass.
 
-## 9. What this file is not
+## 9. Operating rules
+
+How agents run here. The pack's skills read this section instead of each project writing its own
+build skill, and prompts point at it instead of retyping it. Facts, not principles: if a line
+would be the same on every project, it doesn't belong here. No history either: who agreed a rule
+and when goes in the decision log, and the line here carries its D number. Agents read this
+section in full, so every line has to earn its place.
+
+- **Build:** [command]
+- **Targeted tests:** [command pattern for one module or test]
+- **Whole suite:** [command]. Run once, after merging, by the coordinator.
+- **Test and build logs:** [where they go]. Read the tail ([N] lines) or grep; never in full.
+- **Never touch:** [paths, generated files, vendored code, assets an agent must not edit]
+- **Branches and merging:** [one branch per agent batch? who merges, how, when]
+- **Model tiers:** small = [model], mid = [model], top = [model]
+- **Agent budget:** [N] tool calls, then stop and report.
+- **Coordinator budget:** start a new coordinating session at [context size], or daily.
+- **Work that needs a person looking at it:** [visual, audio, feel] runs in its own short session.
+
+## 10. What this file is not
 
 - Not the spec. It doesn't say what to build.
 - Not documentation of the system. It doesn't describe what exists.

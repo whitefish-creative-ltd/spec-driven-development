@@ -10,12 +10,12 @@
 <h1 align="center">Spec-Driven Development Action Pack</h1>
 
 <p align="center">
-  <strong>Twelve markdown templates, twelve worked examples and six portable agent skills.</strong><br>
+  <strong>Twelve markdown templates, twelve worked examples and seven portable agent skills.</strong><br>
   Write down what the thing is supposed to do, precisely enough that two people could disagree about whether it does it.
 </p>
 
 <p align="center">
-  <a href="https://github.com/whitefish-creative-ltd/spec-driven-development/releases/latest"><img alt="Version 2.0.0" src="https://img.shields.io/badge/version-2.0.0-0A4E75"></a>
+  <a href="https://github.com/whitefish-creative-ltd/spec-driven-development/releases/latest"><img alt="Version 2.1.0" src="https://img.shields.io/badge/version-2.1.0-0A4E75"></a>
   <img alt="Markdown only" src="https://img.shields.io/badge/format-markdown%20only-569CBE">
   <img alt="Works with any agent" src="https://img.shields.io/badge/agents-Claude%20Code%20%7C%20Codex%20%7C%20Cursor%20%7C%20Copilot-808285">
   <a href="LICENSE"><img alt="Licence: MIT" src="https://img.shields.io/badge/licence-MIT-0A4E75"></a>
@@ -41,7 +41,7 @@ Spec-driven development fixes that with a small set of documents that live in th
 to the code they govern: a problem brief, a feature spec, a not-building register, a task
 breakdown, a decision log, and the traceability and audits that prove what was built matches what
 was agreed. This pack is those documents as blank templates, the same templates filled in for one
-worked feature, and six optional agent skills that automate the repetitive parts.
+worked feature, and seven optional agent skills that automate the repetitive parts.
 
 The method is written up in full on the WhiteFish Creative site:
 **[Spec-Driven Development: what it is, what it isn't, and why your last build went sideways](https://whitefishcreative.co.uk/spec-driven-development/)**.
@@ -53,7 +53,7 @@ sdd-action-pack/
 ├── README.md      <- the layout, the loop, and how to wire it to your agent
 ├── templates/     <- the twelve blanks. This is the method. Copy these into your repo
 ├── examples/      <- the same twelve, filled in for one worked feature, to read not to copy
-└── skills/        <- six optional agent skills, an update checker, and a README about trusting them
+└── skills/        <- seven optional agent skills, an update checker, and a README about trusting them
 ```
 
 In this repository the pack lives in [`action-pack/`](action-pack/). Start with
@@ -63,6 +63,7 @@ In this repository the pack lives in [`action-pack/`](action-pack/). Start with
 |---|---|
 | `spec-forge` | Interview a vague request into a spec plus a not-building register |
 | `spec-decompose` | Break the spec into independently verifiable tasks |
+| `spec-orchestrate` | Hand tasks to build agents from their briefs, and keep the state in the repo |
 | `spec-build` | Implement a feature's tasks one at a time, refusing out-of-scope work |
 | `spec-verify` | Write tests that assert the criteria, including negative cases |
 | `spec-audit` | Compare specified versus built versus proven, adversarially |

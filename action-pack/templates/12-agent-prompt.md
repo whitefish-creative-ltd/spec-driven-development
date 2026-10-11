@@ -2,8 +2,9 @@
 
 **Coordinator:**
 **Date:**
-**Model:** small | mid | top *(small for bookkeeping, indexes and recording answers; mid for S
-tasks and fix-ups; top for M tasks and audits)*
+**Model:** small | mid | top *(from the tasks' briefs; the largest task decides. Small for
+bookkeeping, indexes and recording answers; mid for S tasks and fix-ups; top for M tasks and
+audits. The constitution's operating rules map these to real model names)*
 
 > The coordinator names the reading. The agent reads what is on this page and nothing else. Every
 > blank left empty is a file the agent will go looking for, and that looking is where the money
@@ -29,6 +30,7 @@ Build these in order, one at a time. Each is held to its own scope in `tasks.md`
 
 Standing rules:
 - `docs/spec/constitution.md`
+- Operating rules: `docs/spec/constitution.md` §9. Don't retype them here.
 
 Spec files for this feature, picked from `docs/spec/INDEX.md`:
 - `docs/spec/features/[NNN-name]/tasks.md`
@@ -38,18 +40,23 @@ Spec files for this feature, picked from `docs/spec/INDEX.md`:
 Decisions that bind this work, picked from `docs/spec/decision-log.md`: [D numbers, each with
 the file holding its full entry]
 
-Code:
-- `[path/to/file]`, [function or class, if the file is large]
-- `[path/to/file]`
+Code, the union of these tasks' Read lists in `tasks.md`, and nothing a brief doesn't name:
+- `[path/to/file]::[function]`
+- `[path/to/file]::[function]`
+- Inventory rows: [numbers, if the feature has `inventory.md`]
 
 Do not read any other feature's folder. Do not open code files that are not listed here; if you
 need one, stop and ask for it. Read each file once, and only read it again if it has changed.
 
 ## Tests
 
-While building, run only these, with output to a log you grep rather than read in full:
+While building, run only each task's Prove command from its brief, with output to a log you
+grep or tail rather than read in full:
 
-    [targeted test command] > [log file] 2>&1; grep -E "[pass/fail pattern]" [log file]
+    [Prove command] > [log file] 2>&1; grep -E "[pass/fail pattern]" [log file]
+
+*(Use `tail -n 40 [log file]` where the output has no reliable pass/fail line: compiler errors
+don't match test patterns.)*
 
 Run them once to see them fail and once to see them pass. Do not run the whole suite; that
 happens once, after merging.
@@ -59,6 +66,7 @@ happens once, after merging.
 - the tasks above are done;
 - the tests have failed twice in a row;
 - [the fix-up loop on any one task has gone past N attempts];
+- you have made [budget, from the operating rules] tool calls;
 - you meet a decision the spec didn't make, or you would need a file not listed here;
 - [anything else specific to this work].
 
@@ -70,10 +78,14 @@ About 10 to 15 lines. Nothing else.
 - Commits: [hash, one line each]
 - Open questions: [one line each]
 - Not decided by the spec: [what you met, and what you did instead of deciding it]
+- Files touched: [paths]
+- Wrong pointers: [any brief entry that was missing or had moved, or "none"]
 ```
 
 ## Before you send it
 
+- [ ] Every task named has a brief in `tasks.md`. If one doesn't, it goes back to decompose, not
+      to the agent.
 - [ ] Every spec file, decision number and code file is named. No "see the feature folder".
 - [ ] The tasks are in dependency order, and there are no more than five.
 - [ ] The test command runs only the tests for these tasks.

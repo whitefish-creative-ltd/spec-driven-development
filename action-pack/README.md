@@ -10,7 +10,7 @@ to the code they govern.
 with. Nothing in the pack is tied to it. All twelve templates are plain markdown with no tool in
 them at all, so the method works exactly the same on Codex, Cursor, Copilot, Gemini CLI, Windsurf,
 or whatever your team has settled on this quarter, and it works with no agent whatsoever on a
-codebase written entirely by people. The six skills are portable too: they are `SKILL.md` files
+codebase written entirely by people. The seven skills are portable too: they are `SKILL.md` files
 following the open Agent Skills standard, which Claude Code, Codex and Cursor all read, so they are
 not the Claude-only part either. The one place your tool shows up is the file you point it at, and
 those filenames are listed further down.
@@ -22,7 +22,7 @@ sdd-action-pack/
 ├── README.md      <- this file. The layout, the loop, and how to wire it to your agent
 ├── templates/     <- the twelve blanks. This is the method. Copy these into your repo
 ├── examples/      <- the same twelve, filled in for one worked feature, to read not to copy
-└── skills/        <- six optional agent skills, an update checker, and a README about trusting them
+└── skills/        <- seven optional agent skills, an update checker, and a README about trusting them
 ```
 
 `templates/` is the pack. Everything else exists to explain it. If you only ever open one folder,
@@ -49,13 +49,14 @@ your-project/
 │       │   │   ├── problem-brief.md     <- 01  the problem this feature exists to solve
 │       │   │   ├── feature-spec.md      <- 03  the criteria, checkable by a stranger
 │       │   │   ├── not-building.md      <- 04  what this feature deliberately excludes
+│       │   │   ├── inventory.md         <- if it changes existing code: where things live, where they go
 │       │   │   ├── tasks.md             <- 05  criteria cut into verifiable work
 │       │   │   ├── decision-log.md      <- 06  the decisions taken building this feature
 │       │   │   ├── change-and-drift.md  <- 07  append only, decided change vs silent drift
 │       │   │   └── traceability.md      <- 08  filled in by someone who didn't build it
 │       │   │
 │       │   └── 002-password-reset/
-│       │       └── ... the same seven
+│       │       └── ... the same seven, and an inventory if needed
 │       │
 │       └── audits/
 │           └── 2026-02-11-spec-tasker.md  <- 10  one per skill, before you run it
@@ -124,10 +125,33 @@ feature folder, add the feature's line in the same commit. When a feature is ret
 into another, its line says so rather than disappearing, so an old reference still leads
 somewhere.
 
-**`coordinator-notes.md` is for when things go sideways.** A coordinating session that dies, or is
-replaced by a fresh one, leaves the next one nothing but the repository. `tasks.md` says which
-tasks are done. This note says the rest: which agents are out and on what, which questions are
-waiting on a person, and what comes next. A handful of lines that describe now, not a history.
+**`coordinator-notes.md` is where the next session starts.** A coordinating session that dies, or
+is replaced by a fresh one, leaves the next one nothing but the repository. That is the point: the
+state lives in the repo, not in a long session or in one tool's memory. `tasks.md` says which tasks
+are done, in each task's Status. This note says the rest, and nothing that is already in
+`tasks.md`, because two lists of the same thing drift apart:
+
+```markdown
+# Coordinator notes
+
+## In flight
+- 001-03 to 001-05, agent started 2026-03-18, mid model
+
+## Waiting on a person
+- 001: does a reset clear an active lockout? (from the 001-03 report)
+
+## Next
+- 001-06 once 001-05 merges; then audit 001 in a fresh session
+```
+
+A handful of lines that describe now, not a history, rewritten at the end of every coordinating
+session. `spec-orchestrate` keeps it.
+
+**`inventory.md` is the map of existing code.** Only for a feature that changes code that already
+exists: one row per existing behaviour, its `file::function`, and where it goes. It is drafted
+before the spec interview and finished by it, because where each behaviour goes is a decision.
+Task briefs point at its rows, so no build agent has to go looking. It is true of the commit it
+was read at; once the feature is built, it is history.
 
 **It is `docs/spec/`, not `spec/`.** A top-level `spec/` is already the test directory in Ruby,
 JavaScript and a dozen other ecosystems, and you do not want your contract fighting your test
@@ -164,14 +188,16 @@ review when it changes.
 Read `docs/spec/constitution.md` before doing anything. It is the source of truth for the
 standing rules of this repository and it overrides anything in this file.
 
-When working on a feature, read the files in that feature's folder under
-`docs/spec/features/` that you have been pointed at, or every file in it if you were not
-given a list, and no other feature's folder. The feature spec is the contract and
-`not-building.md` is binding. If a request conflicts with either, stop and say so rather
+When working on a feature, read the files you have been pointed at under
+`docs/spec/features/`, and no other feature's folder. If you were not given a list, ask for
+one rather than reading the folder. The feature spec is the contract and `not-building.md` is
+binding. If a request conflicts with either, stop and say so rather
 than deciding for yourself.
 ```
 
-That last sentence is the one that earns its place. Left to itself an agent resolves a conflict
+Two sentences in there earn their place. "Ask for one rather than reading the folder" is the
+cheap one: an agent left to read a whole feature folder reads all of it, every time, and reading
+is most of what an agent costs. The last sentence is the important one. Left to itself an agent resolves a conflict
 silently and plausibly, and you find out three hundred commits later. Told to stop and ask, it
 behaves like the junior developer who walked over to your desk.
 
@@ -199,7 +225,7 @@ point at the same file, which is the entire reason the constitution is tool-agno
 | 02 | The Spec | `epics/NNN-name/spec.md`, optional | Several features share one contract and need a parent. |
 | 03 | Feature Spec | `features/NNN-name/feature-spec.md` | One feature, with acceptance criteria that can actually be checked. |
 | 04 | Not Building Register | `features/NNN-name/not-building.md` | Always. This is the one that saves you. |
-| 05 | Task Breakdown | `features/NNN-name/tasks.md` | Turning a spec into work an agent or a human can pick up. |
+| 05 | Task Breakdown | `features/NNN-name/tasks.md` | Turning a spec into work an agent or a human can pick up, each task with a brief saying where. |
 | 06 | Decision Log | `docs/spec/decision-log.md` for the overview, `features/NNN-name/decision-log.md` for the working log | Someone asks "why is it like this" six months later. |
 | 07 | Change & Drift Register | `features/NNN-name/change-and-drift.md` | The scope moved. Prove it, price it, or refuse it. |
 | 08 | AC Traceability Matrix | `features/NNN-name/traceability.md` | Proving what's built matches what was specified. |
@@ -210,8 +236,9 @@ point at the same file, which is the entire reason the constitution is tool-agno
 
 ## How to actually use it
 
-**Once, at the start.** Copy template 11 to `docs/spec/constitution.md` and fill it in, then wire
-it into your agent's instructions file as above. Copy template 09 to
+**Once, at the start.** Copy template 11 to `docs/spec/constitution.md` and fill it in, including
+§9, the operating rules: your build and test commands, what agents never touch, how merging works,
+which models you use. Then wire it into your agent's instructions file as above. Copy template 09 to
 `docs/spec/definition-of-done.md` and agree it as a team, once, so nobody is negotiating the bar
 at the point they most want it lowered. Create `docs/spec/decision-log.md` from template 06 and
 leave it empty; it wants to exist before the first decision worth recording happens.
@@ -220,11 +247,13 @@ That is the whole project-level setup: two documents to write and one to open. T
 spec to agree, no up-front design phase to sit through, and nothing else to do before you start on
 the first feature.
 
-**Per feature, before any code.** Make `docs/spec/features/NNN-name/`. Work down the folder in
-order: the problem brief first, because it is the one that stops you building the wrong thing
+**Per feature, before any code.** Make `docs/spec/features/NNN-name/`. If the feature changes code
+that already exists, have an agent draft `inventory.md` first, read-only. Then work down the
+folder in order: the problem brief first, because it is the one that stops you building the wrong thing
 well; then the feature spec, with criteria a stranger could check; then the not-building register,
 with a reason on every line, because "out of scope" is a restatement of the heading and not a
-reason; then the task breakdown. If a task cannot be verified on its own, it is two tasks.
+reason; then the task breakdown. If a task cannot be verified on its own, it is two tasks. If an
+agent couldn't start it from its brief without exploring, the brief isn't finished.
 
 **While building.** Point the agent at the constitution and at this feature's folder. Every
 decision nobody had already made goes in the feature's `decision-log.md` as it is taken, not
@@ -233,11 +262,13 @@ reconstructed afterwards, under the next free number from the overview at
 the spec goes in `change-and-drift.md`, which keeps decided change and silent drift apart, and
 that separation is the whole point of the document.
 
-If agents do the building, give one agent one feature: its tasks in order, four or five at most,
-with template 12 filled in. That names the exact spec files, decisions and code it reads, the
-tests it runs, when it stops, and the ten-to-fifteen-line report it hands back. The reasons, and
-what they saved when measured, are in `skills/spec-build/SKILL.md` under "Running build agents
-efficiently". They hold whether or not you use the skill.
+If agents do the building, run the coordinating in its own session, and keep it to coordinating:
+no code, no debugging, no spec-writing. Give one agent one feature: its tasks in order, four or
+five at most, with template 12 filled in from the task briefs. That names the exact spec files,
+decisions and code it reads, the tests it runs, its tool-call budget, when it stops, and the
+ten-to-fifteen-line report it hands back. `skills/spec-orchestrate/SKILL.md` is the procedure,
+and `skills/spec-build/SKILL.md` under "Working efficiently" has what it saved when measured.
+Both hold whether or not you use the skills.
 
 **Before you call it done.** Someone who did not build it fills in `traceability.md`, mapping
 every criteria to the test that proves it. Unmapped criteria is the finding. Then run the feature
@@ -318,8 +349,8 @@ back.
 
 ## The skills
 
-`skills/` holds six optional skills, one per stage of the loop plus one for bringing an existing
-codebase into it, and `spec-update`, which checks whether they are the latest version. Each is a
+`skills/` holds seven optional skills, one per stage of the loop, one for coordinating build
+agents, and one for bringing an existing codebase into it, and `spec-update`, which checks whether they are the latest version. Each is a
 folder containing a `SKILL.md`, which is the open Agent Skills standard, so they are not
 Claude-only: copy the folders into whichever skills directory your agent reads. At the time of
 writing that is `.claude/skills/` for Claude Code, `.agents/skills/` for Codex, and Cursor reads

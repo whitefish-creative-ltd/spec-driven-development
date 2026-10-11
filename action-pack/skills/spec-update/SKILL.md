@@ -2,7 +2,7 @@
 name: spec-update
 description: Check whether the installed spec-driven development skills are the latest version, and say what changed if they aren't. Use when someone asks to check for, compare or install updates to the spec-* skills or the SDD action pack. Makes one read-only request to the pack's public GitHub releases, and only when asked; never updates anything without explicit approval.
 metadata:
-  version: "2.0.0"
+  version: "2.1.0"
   publisher: WhiteFish Creative
   source: https://github.com/whitefish-creative-ltd/spec-driven-development
 ---
@@ -63,6 +63,9 @@ When any are behind, show the release notes for every version between the oldest
 and the latest, from the release page or `CHANGELOG.md` in the repository. Say plainly when the
 first number of the version changes: that means the method's rules changed, not just its wording.
 
+If the release has a skill that isn't installed anywhere (2.1.0 added `spec-orchestrate`), say
+so separately: it is a new skill, not an update, and whether to install it is the user's choice.
+
 Finish with the manual route, so nobody needs this skill to update:
 
 ```bash
@@ -81,7 +84,8 @@ Only if the user asks you to update, in this conversation:
 1. Download the release zip into a new temporary folder and unzip it there.
 2. For each skill being updated, show the diff between the installed `SKILL.md` and the new one.
 3. Ask which to replace. Replace only those folders, and only in the directory where each was
-   found. Never touch a skill folder from any other publisher.
+   found. Never touch a skill folder from any other publisher. A new skill the user asks for
+   goes in the same directory as the others.
 4. Report what was replaced, from which version to which, and delete the temporary folder.
 
 If an installed `SKILL.md` has been edited locally, the diff will show it. Point that out before

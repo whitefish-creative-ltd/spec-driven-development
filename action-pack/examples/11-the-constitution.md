@@ -107,7 +107,24 @@ whether someone flagged it here instead of guessing.
 - No agent verifies its own output. The audit is a separate pass, ideally a separate agent with no
   build context.
 
-## 9. What this file is not
+## 9. Operating rules
+
+- **Build:** `make build`
+- **Targeted tests:** `pytest tests/<area>/test_<thing>.py`
+- **Whole suite:** `make test`. Once, after merging, by the coordinator. Twelve minutes.
+- **Test and build logs:** `.agent-logs/`, git-ignored. Grep for `passed|failed|error`, or read
+  the last 40 lines. Never the whole log.
+- **Never touch:** `migrations/` (a migration is its own step, never a side effect), `vendor/`,
+  anything under `generated/`. `billing/` and `auth/session/` need sign-off, per §1.
+- **Branches and merging:** one branch per agent batch, `feat/<feature>-<first task>`. The
+  coordinator merges to main when the batch's tests pass, then runs the whole suite (D011).
+- **Model tiers:** small = Claude Haiku, mid = Claude Sonnet, top = Claude Opus, current versions.
+- **Agent budget:** 120 tool calls, then stop and report.
+- **Coordinator budget:** a new coordinating session each morning, or past 300k tokens of context.
+- **Work that needs a person looking at it:** UI polish runs in its own short session with the
+  template and stylesheet only.
+
+## 10. What this file is not
 
 Not the spec, not system documentation, not a restatement of ruff's rules, not a home for
 feature-specific rules. Standing rules only. Currently two pages. If it reaches three, something
