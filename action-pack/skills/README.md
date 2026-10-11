@@ -23,14 +23,28 @@ recovers one from the code so you can start speccing changes against something r
 ## Installing them
 
 Each skill is a folder with a `SKILL.md` in it, which is the open Agent Skills format, so they are
-not Claude-only. Copy the folders into whichever skills directory your agent reads. At the
-time of writing that is `.claude/skills/` for Claude Code, `.agents/skills/` for Codex, and
-`.cursor/skills/` for Cursor, which also reads the other two. Those paths move, so check your
-tool's current docs.
+not Claude-only. Most also have a `templates/` folder holding the templates that skill fills in,
+so a skill has its templates wherever it is installed and never writes a document from memory.
+Each `SKILL.md` names its templates, and where each filled-in copy goes, under "Templates".
 
+Two copies, then, both from the pack:
+
+```bash
+# from your project's root, with the pack unzipped at path/to/sdd-action-pack
+cp -R path/to/sdd-action-pack/skills/spec-* .claude/skills/     # or .agents/skills/, or .cursor/skills/
+mkdir -p docs/spec/templates
+cp path/to/sdd-action-pack/templates/*.md docs/spec/templates/
 ```
-cp -R skills/spec-* .claude/skills/     # or .agents/skills/, or .cursor/skills/
-```
+
+The first line installs the skills into whichever skills directory your agent reads. At the time
+of writing that is `.claude/skills/` for Claude Code, `.agents/skills/` for Codex, and
+`.cursor/skills/` for Cursor, which also reads the other two; use `~/.claude/skills/` instead to
+install them for every project on the machine. Those paths move, so check your tool's current
+docs.
+
+The other two put every template in the project, at `docs/spec/templates/`. That copy is the
+project's own: adapt a template there and the skills use your version, because they look in
+`docs/spec/templates/` first and fall back to their own copy only when it isn't there.
 
 ## How to invoke one
 
@@ -155,7 +169,7 @@ Template 10's first question is "who publishes it?", so these answer it, rather 
 `SKILL.md` files with no author. All eight are:
 
 - **Published by** WhiteFish Creative (James Studdart), as part of the SDD Action Pack.
-- **Version** 2.1.0, stated in each `SKILL.md` under `metadata.version`. What changed between
+- **Version** 2.1.1, stated in each `SKILL.md` under `metadata.version`. What changed between
   versions is in `CHANGELOG.md` in the repository.
 - **Canonical source:** the GitHub repository at
   `github.com/whitefish-creative-ltd/spec-driven-development`, where every version is a tagged
@@ -171,7 +185,8 @@ substitute for reading them.
 
 ## Read them before you run them
 
-Every one of these is a single markdown file. That's deliberate, and it's the whole argument of
+Every one of these is markdown: a `SKILL.md`, and the templates it fills in, which are the same
+files as the pack's `templates/`. That's deliberate, and it's the whole argument of
 [Spoke 6](https://whitefishcreative.co.uk/spec-driven-development/the-untold-truth/). Before you run any skill, these or anyone
 else's, put it through the Skill Audit Checklist (`templates/10-skill-audit-checklist.md`). These
 are built to pass it:
@@ -194,7 +209,7 @@ skill.
 
 ## What passing the checklist does and doesn't mean
 
-These eight clear the *static* packaging checks: one markdown file each, no bundled executables, no
+These eight clear the *static* packaging checks: markdown only, no bundled executables, no
 `!`-style load-time execution, no network calls beyond `spec-update`'s one, no credential or
 environment access, each readable in a few minutes. That is necessary, not sufficient. Template 10
 also asks for a scratch-repo run with the tool calls watched, and a re-audit on update, and, above

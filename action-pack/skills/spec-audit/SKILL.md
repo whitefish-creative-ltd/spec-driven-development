@@ -2,7 +2,7 @@
 name: spec-audit
 description: "Verify that what was built matches what was specified, adversarially and from outside the build. Use after a feature is built and tested, to produce a traceability matrix and drift report. Never verifies its own build output: run it as a separate pass with no build context."
 metadata:
-  version: "2.1.0"
+  version: "2.1.1"
   publisher: WhiteFish Creative
   source: https://github.com/whitefish-creative-ltd/spec-driven-development
 ---
@@ -13,7 +13,8 @@ metadata:
 and reports every place they disagree.
 
 **What this skill touches:** the spec, the feature specs, the not-building register, the code,
-and the tests, source read-only, in the working directory, plus the audit report it writes. If
+and the tests, source read-only, in the working directory, the templates named below, plus the audit
+report it writes. If
 it runs the test suite to check results, that can write caches, snapshots and coverage artifacts;
 it treats source as read-only but does not pretend running tests is side-effect-free.
 
@@ -33,6 +34,18 @@ open other code only to trace a criteria or to follow something the diff touches
 at the tool-call budget, as a build agent would.
 
 ---
+
+## Templates
+
+For each template below, use the project's copy at `docs/spec/templates/<file>` if there is one,
+because the team may have adapted it. If there isn't, use the copy in this skill's own folder,
+`templates/<file>`. Never write one of these documents from memory: the template is the format
+the other skills, and the next person to read it, expect.
+
+- `08-ac-traceability-matrix.md` → `docs/spec/features/NNN-name/traceability.md`, the report
+- `07-change-and-drift-register.md` → the format for each drift finding and its recommended
+  verdict. The audit reports them; it does not write them into the feature's
+  `change-and-drift.md`, because deciding them is a person's job
 
 ## The one rule
 
@@ -82,7 +95,8 @@ not just the instances.
 
 ## Output
 
-A report with the three parts above, a summary (criteria specified, criteria with a real
+A report in the shape of `08-ac-traceability-matrix.md`, written to the feature's
+`traceability.md`: the three parts above, a summary (criteria specified, criteria with a real
 asserting test, unmapped criteria, untraced builds, missed criteria), and a verdict: Clean,
 Findings, or Fail. Findings or Fail blocks release until resolved.
 

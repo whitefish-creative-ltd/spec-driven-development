@@ -2,7 +2,7 @@
 name: spec-build
 description: Implement a feature's tasks, one at a time and in order, against their acceptance criteria without drifting beyond them. Use when building decomposed tasks and you want the work held strictly to what was specified, and the agent's reading, testing and reporting kept lean. Refuses out-of-scope work and says so explicitly rather than helpfully adding things.
 metadata:
-  version: "2.1.0"
+  version: "2.1.1"
   publisher: WhiteFish Creative
   source: https://github.com/whitefish-creative-ltd/spec-driven-development
 ---
@@ -14,7 +14,7 @@ acceptance criteria, and refuses to build anything a task didn't ask for.
 
 **What this skill touches:** the files in each task's Touch list, in the working directory. It
 reads the constitution, the tasks, and the spec files, decisions and code its prompt names, to
-know its boundaries. Nothing else.
+know its boundaries, and the templates named below. Nothing else.
 
 **What this skill does NOT do:** it bundles no scripts and introduces no network requirement of
 its own, and it reads no credentials or environment. Note the honest boundary: *implementing* a
@@ -23,6 +23,18 @@ service. The skill itself doesn't require the network, but the work sometimes do
 that is not silent: see "When the work needs more than the repo" below. Plain instructions.
 
 ---
+
+## Templates
+
+For each template below, use the project's copy at `docs/spec/templates/<file>` if there is one,
+because the team may have adapted it. If there isn't, use the copy in this skill's own folder,
+`templates/<file>`. Never write one of these documents from memory: the template is the format
+the other skills, and the next person to read it, expect.
+
+- `06-decision-log.md` → a non-obvious choice: its full entry in the feature's `decision-log.md`,
+  and its one line in `docs/spec/decision-log.md`, under the next free number there
+- `07-change-and-drift-register.md` → `docs/spec/features/NNN-name/change-and-drift.md`, when a
+  refused request becomes a change request
 
 ## The one rule
 
@@ -59,8 +71,9 @@ You now know the standing rules, what to build, and what not to. Hold all of it.
   decision is drift even when the guess is good, because nobody decided it.
 - Check every change against the not-building register. If what you're about to add appears
   there, do not add it. Say that you were about to and stopped.
-- Record any non-obvious choice (a library, a tradeoff) briefly, so the next reader doesn't
-  "fix" a deliberate decision back into the wrong one.
+- Record any non-obvious choice (a library, a tradeoff) briefly, as a decision log entry
+  (`06-decision-log.md`), so the next reader doesn't "fix" a deliberate decision back into the
+  wrong one.
 
 ## Working efficiently
 
@@ -100,7 +113,7 @@ doing the building:
    anything the spec didn't decide, and any pointer in a brief that was missing or had moved.
    Nothing else.
 
-Template 12, the agent prompt, has a blank for each of these, so the coordinator fills them in
+The agent prompt (`12-agent-prompt.md`, which spec-orchestrate carries) has a blank for each of these, so the coordinator fills them in
 rather than having to remember them.
 
 ## When the work needs more than the repo

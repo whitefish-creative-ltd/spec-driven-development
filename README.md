@@ -15,7 +15,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/whitefish-creative-ltd/spec-driven-development/releases/latest"><img alt="Version 2.1.0" src="https://img.shields.io/badge/version-2.1.0-0A4E75"></a>
+  <a href="https://github.com/whitefish-creative-ltd/spec-driven-development/releases/latest"><img alt="Version 2.1.1" src="https://img.shields.io/badge/version-2.1.1-0A4E75"></a>
   <img alt="Markdown only" src="https://img.shields.io/badge/format-markdown%20only-569CBE">
   <img alt="Works with any agent" src="https://img.shields.io/badge/agents-Claude%20Code%20%7C%20Codex%20%7C%20Cursor%20%7C%20Copilot-808285">
   <a href="LICENSE"><img alt="Licence: MIT" src="https://img.shields.io/badge/licence-MIT-0A4E75"></a>
@@ -82,12 +82,17 @@ Or clone the repository:
 git clone https://github.com/whitefish-creative-ltd/spec-driven-development.git
 ```
 
-Then copy the templates into `docs/spec/` in your project, following the layout in the pack's
-README, and, if you want them, copy the skills into whichever skills directory your agent reads:
+Then, from your project's root, copy the templates into `docs/spec/templates/`, and, if you want
+them, the skills into whichever skills directory your agent reads. Each skill carries the
+templates it fills in, and uses the project's copy instead when there is one:
 
 ```bash
-cp -R action-pack/skills/spec-* .claude/skills/     # or .agents/skills/, or .cursor/skills/
+mkdir -p docs/spec/templates
+cp path/to/spec-driven-development/action-pack/templates/*.md docs/spec/templates/
+cp -R path/to/spec-driven-development/action-pack/skills/spec-* .claude/skills/     # or .agents/skills/, or .cursor/skills/
 ```
+
+The pack's README has the rest of the layout: which templates become which files, and where.
 
 **This is not a Claude thing.** Every template is plain markdown with no tool in it, and the skills
 follow the open Agent Skills standard, so they work in Claude Code, Codex, Cursor and anything else

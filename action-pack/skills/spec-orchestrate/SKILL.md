@@ -2,7 +2,7 @@
 name: spec-orchestrate
 description: Coordinate the building of a feature's decomposed tasks. Hands each batch of tasks to a fresh agent with a prompt built from the task briefs and the constitution's operating rules, on the model the tasks call for, takes back a short report, and keeps the state in the repository so a new session can pick it up. Use after spec-decompose, when agents will do the building. Never reads or writes code itself.
 metadata:
-  version: "2.1.0"
+  version: "2.1.1"
   publisher: WhiteFish Creative
   source: https://github.com/whitefish-creative-ltd/spec-driven-development
 ---
@@ -14,7 +14,7 @@ what, on which model, with which prompt, and records where things stand.
 
 **What this skill touches:** it reads `docs/spec/coordinator-notes.md`, the constitution's
 operating rules, the `tasks.md` of the feature it is running, and, when a prompt needs them,
-`docs/spec/INDEX.md` and the decision log overview. It writes `coordinator-notes.md`, the Status
+`docs/spec/INDEX.md` and the decision log overview, and the templates named below. It writes `coordinator-notes.md`, the Status
 fields in `tasks.md`, and the prompts it hands out. It does not open source code or test output.
 
 **What this skill does NOT do:** it bundles no scripts, makes no network calls of its own, and
@@ -23,6 +23,18 @@ whatever your tool provides and under the constitution's operating rules; this s
 either on its own authority. Plain instructions. Read them.
 
 ---
+
+## Templates
+
+For each template below, use the project's copy at `docs/spec/templates/<file>` if there is one,
+because the team may have adapted it. If there isn't, use the copy in this skill's own folder,
+`templates/<file>`. Never write one of these documents from memory: the template is the format
+the other skills, and the next person to read it, expect.
+
+- `12-agent-prompt.md` → the prompt for each build agent. It is handed over, not saved
+- `11-the-constitution.md`, §9 → what the operating rules look like. If the project's
+  constitution has no operating rules, stop and show the user this section to fill in; do not
+  guess a test command or a model name
 
 ## The one rule
 
@@ -55,7 +67,7 @@ brief exists to prevent, moved into the most expensive session there is.
    order. The prompt's reading list is the union of their Read lists, so the set-up reading is
    paid once, not once per task. After a long fix-up loop, hand the rest to a fresh agent with the
    last one's report.
-2. **Build the prompt from template 12.** The reading comes from the briefs, the tests from each
+2. **Build the prompt from `12-agent-prompt.md`.** The reading comes from the briefs, the tests from each
    Prove, the standing rules from the operating rules. Don't retype project rules into the prompt;
    point at them.
 3. **The model comes from the briefs.** The largest task decides: small for bookkeeping, indexes

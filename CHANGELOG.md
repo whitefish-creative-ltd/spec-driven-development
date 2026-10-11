@@ -2,6 +2,14 @@
 
 The action pack and its skills are versioned together. Each `SKILL.md` states its version under `metadata.version`.
 
+## 2.1.1 — 2026-10-11
+
+- **The skills carry their templates.** Each skill that fills in a template now has it in its own `templates/` folder, and names it, and where the filled-in copy goes, under a new "Templates" section. Before, the skills referred to "template 05" or "the Spec template" while installing only `SKILL.md`, so an agent had to find the template or write the document from memory
+- **The install copies the templates into the project**, at `docs/spec/templates/`. That copy is the project's own: the skills use it first, so a template a team adapts there is the one the skills follow. The install instructions in both READMEs, and spec-update's manual route, now say so
+- spec-update replaces a skill's `templates/` with the skill, and never touches the project's `docs/spec/templates/`; it names the templates a release changed instead
+- Fixed: spec-forge described template 02's sections (numbered functional requirements, non-functional requirements) for what is a feature spec, template 03 (Given / When / Then acceptance criteria). It now writes the problem brief, feature spec and not-building register from 01, 03 and 04, and the parent spec from 02 only when one is asked for
+- The repository has `scripts/sync-skill-templates.sh`, which copies the templates into the skills; the release fails if a skill's copy is out of date. It is repository tooling, not part of the pack
+
 ## 2.1.0 — 2026-10-11
 
 - **Task briefs.** Every task in template 05 now says what to read (`file::function`), which files it may touch, and the command that proves it, plus its model when that differs from its size. spec-decompose checks that an agent could start each task without exploring, because unguided exploring is where build agents spend most of their tokens

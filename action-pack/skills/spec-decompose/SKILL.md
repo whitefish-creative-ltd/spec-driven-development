@@ -2,7 +2,7 @@
 name: spec-decompose
 description: Break a specification into tasks that can each be verified independently. Use after a spec exists and before building, to turn requirements into atomic units of work that each map to specific acceptance criteria. Refuses to produce tasks that cannot be verified on their own.
 metadata:
-  version: "2.1.0"
+  version: "2.1.1"
   publisher: WhiteFish Creative
   source: https://github.com/whitefish-creative-ltd/spec-driven-development
 ---
@@ -12,14 +12,23 @@ metadata:
 **What this skill does:** turns a specification into a task list where every task can be
 verified on its own and maps to the criteria it satisfies.
 
-**What this skill touches:** the spec, its feature specs and the inventory (read), and the task
-file it's asked to write, in the working directory. It may open a code file only to confirm a
+**What this skill touches:** the spec, its feature specs and the inventory (read), the template
+named below, and the task file it's asked to write, in the working directory. It may open a code file only to confirm a
 pointer the inventory gives, not to search. Nothing else.
 
 **What this skill does NOT do:** no scripts, no network, no environment or credential access,
 nothing outside the working directory. Plain instructions.
 
 ---
+
+## Templates
+
+For each template below, use the project's copy at `docs/spec/templates/<file>` if there is one,
+because the team may have adapted it. If there isn't, use the copy in this skill's own folder,
+`templates/<file>`. Never write one of these documents from memory: the template is the format
+the other skills, and the next person to read it, expect.
+
+- `05-task-breakdown.md` → `docs/spec/features/NNN-name/tasks.md`
 
 ## The one rule
 
@@ -57,7 +66,7 @@ For each task, produce:
 - **Size:** Small (one sitting) or Medium (about a day). If you're tempted to write Large,
   that's not a size, it's a signal you haven't decomposed it yet. Break it down.
 - **Status:** Not started, to begin with. The coordinator keeps it current.
-- **The brief:** what an agent needs to start without exploring (template 05).
+- **The brief:** what an agent needs to start without exploring (`05-task-breakdown.md`).
   - **Read:** the exact `file::function`s, and the inventory rows by number where there is one.
     Function names, not line numbers.
   - **Touch:** the files it may change or create. This is the task's scope.
@@ -94,5 +103,6 @@ If any answer is no, the decomposition isn't done.
 - Every criteria is satisfied by at least one task.
 - Dependencies are drawn.
 - No task is sized Large.
+- `tasks.md` follows `05-task-breakdown.md`.
 - Every task has a brief: Read, Touch and Prove filled in.
 - If there is an inventory, every row is claimed by a task or marked "no task" with a reason.

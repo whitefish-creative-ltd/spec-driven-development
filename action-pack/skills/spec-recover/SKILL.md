@@ -2,7 +2,7 @@
 name: spec-recover
 description: Recover a spec-shaped account of an existing codebase, then validate it against the code. Use when inheriting, documenting, mapping, auditing, or handing over a system that was built without a spec, "what does this codebase do", "how is this built". Produces one comprehensive Markdown document with every claim traced to a file, then re-reads the code to check it. Documents what exists; does not propose rebuilds.
 metadata:
-  version: "2.1.0"
+  version: "2.1.1"
   publisher: WhiteFish Creative
   source: https://github.com/whitefish-creative-ltd/spec-driven-development
 ---

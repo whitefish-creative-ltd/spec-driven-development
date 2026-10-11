@@ -2,7 +2,7 @@
 name: spec-forge
 description: Turn a vague feature request into a specification by interrogation, not transcription. Use when someone describes something they want built in loose terms and you need to surface the decisions hidden inside it before any code is written. Produces a spec document and a standalone not-building register. Challenges vague answers rather than recording them.
 metadata:
-  version: "2.1.0"
+  version: "2.1.1"
   publisher: WhiteFish Creative
   source: https://github.com/whitefish-creative-ltd/spec-driven-development
 ---
@@ -13,14 +13,32 @@ metadata:
 specification and a separate list of things you're deliberately not building.
 
 **What this skill touches:** the files it's explicitly asked to create or read in the working
-directory, and, when the feature changes existing code, that code, read-only, for the inventory
-(Phase 0). Nothing else.
+directory, the templates named below, and, when the feature changes existing code, that code,
+read-only, for the inventory (Phase 0). Nothing else.
 
 **What this skill does NOT do:** it runs no scripts, makes no network calls, reads no
 environment variables or credentials, and touches nothing outside the working directory. It is
 plain instructions. Read them.
 
 ---
+
+## Templates
+
+For each template below, use the project's copy at `docs/spec/templates/<file>` if there is one,
+because the team may have adapted it. If there isn't, use the copy in this skill's own folder,
+`templates/<file>`. Never write one of these documents from memory: the template is the format
+the other skills, and the next person to read it, expect.
+
+- `01-problem-brief.md` → `docs/spec/features/NNN-name/problem-brief.md`
+- `03-feature-spec.md` → `feature-spec.md` in the same folder
+- `04-not-building-register.md` → `not-building.md` in the same folder
+- `06-decision-log.md` → each decision the interview takes: its full entry in the feature's
+  `decision-log.md`, and its one line in `docs/spec/decision-log.md`, under the next free number
+  there
+- `02-the-spec.md` → `docs/spec/epics/NNN-name/spec.md`, only when several features share one
+  contract and the user asks for a parent spec
+
+`inventory.md` has no template; its shape is in Phase 0.
 
 ## The one rule
 
@@ -98,15 +116,18 @@ For the feature itself, work through these, challenging vague answers every time
 
 ### Phase 3: Produce the artefacts
 
-Write two files.
+Write three files, each from its template (see Templates above).
 
-**The spec** (use the Spec template structure): problem, goal, context, constraints, functional
-requirements (numbered), non-functional requirements (each with a measure), a summary of
-non-goals, edge cases, and an explicit "what must never happen" section.
+**The problem brief** (`01-problem-brief.md`): what Phase 1 established, in the brief's sections.
 
-**The not-building register** (separate file, deliberately): every thing considered and
-rejected, with a reason on each line. Not "out of scope", an actual reason. This file is
-standalone because non-goals buried inside a spec get quietly overturned.
+**The feature spec** (`03-feature-spec.md`): the user story, then acceptance criteria as Given /
+When / Then, numbered, each checkable by someone who wasn't in the room. Edge cases, an explicit
+"what must never happen" section, and dependencies. A non-functional need is an acceptance criteria
+with a measure, not an adjective.
+
+**The not-building register** (`04-not-building-register.md`, separate file, deliberately): every
+thing considered and rejected, with a reason on each line. Not "out of scope", an actual reason.
+This file is standalone because non-goals buried inside a spec get quietly overturned.
 
 ### Phase 4: Challenge your own output
 
@@ -117,8 +138,10 @@ checkable.
 
 ## Acceptance criteria for this skill's output
 
-- Every functional requirement is numbered and specific.
-- Every non-functional requirement has a measure, not an adjective.
+- The problem brief, feature spec and not-building register each follow their template.
+- Every acceptance criteria is numbered, in Given / When / Then form, and checkable by someone
+  who wasn't in the room.
+- Every non-functional need is a criteria with a measure, not an adjective.
 - The not-building register exists as a separate file with a reason per line.
 - There is an explicit "what must never happen" section.
 - No banned vague words survive in any acceptance criteria.

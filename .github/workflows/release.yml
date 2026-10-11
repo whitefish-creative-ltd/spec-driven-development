@@ -16,6 +16,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Check the skills carry current templates
+        run: scripts/sync-skill-templates.sh --check
+
       - name: Build the zip
         run: |
           mkdir -p dist/sdd-action-pack

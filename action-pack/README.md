@@ -20,7 +20,7 @@ those filenames are listed further down.
 ```
 sdd-action-pack/
 ├── README.md      <- this file. The layout, the loop, and how to wire it to your agent
-├── templates/     <- the twelve blanks. This is the method. Copy these into your repo
+├── templates/     <- the twelve blanks. This is the method. Copy these to docs/spec/templates/
 ├── examples/      <- the same twelve, filled in for one worked feature, to read not to copy
 └── skills/        <- seven optional agent skills, an update checker, and a README about trusting them
 ```
@@ -43,6 +43,7 @@ your-project/
 │       ├── decision-log.md              <- 06  the overview: every decision, one line each
 │       ├── INDEX.md                     <- the map: every feature, with its folder
 │       ├── coordinator-notes.md         <- where the next coordinator picks up
+│       ├── templates/                   <- all twelve blanks, the project's own copy
 │       │
 │       ├── features/
 │       │   ├── 001-user-login/
@@ -236,14 +237,18 @@ point at the same file, which is the entire reason the constitution is tool-agno
 
 ## How to actually use it
 
-**Once, at the start.** Copy template 11 to `docs/spec/constitution.md` and fill it in, including
+**Once, at the start.** Copy the whole `templates/` folder to `docs/spec/templates/`. Every
+document from here on starts as a copy of one of those, and the skills look there first, so if
+your team changes a template, it changes there. Then copy template 11 to
+`docs/spec/constitution.md` and fill it in, including
 §9, the operating rules: your build and test commands, what agents never touch, how merging works,
 which models you use. Then wire it into your agent's instructions file as above. Copy template 09 to
 `docs/spec/definition-of-done.md` and agree it as a team, once, so nobody is negotiating the bar
 at the point they most want it lowered. Create `docs/spec/decision-log.md` from template 06 and
 leave it empty; it wants to exist before the first decision worth recording happens.
 
-That is the whole project-level setup: two documents to write and one to open. There is no system
+That is the whole project-level setup: one folder to copy, two documents to write and one to
+open. There is no system
 spec to agree, no up-front design phase to sit through, and nothing else to do before you start on
 the first feature.
 

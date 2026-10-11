@@ -2,7 +2,7 @@
 name: spec-update
 description: Check whether the installed spec-driven development skills are the latest version, and say what changed if they aren't. Use when someone asks to check for, compare or install updates to the spec-* skills or the SDD action pack. Makes one read-only request to the pack's public GitHub releases, and only when asked; never updates anything without explicit approval.
 metadata:
-  version: "2.1.0"
+  version: "2.1.1"
   publisher: WhiteFish Creative
   source: https://github.com/whitefish-creative-ltd/spec-driven-development
 ---
@@ -25,6 +25,16 @@ or your code is sent. It never runs on its own, it never installs without asking
 no scripts. Plain instructions. Read them.
 
 ---
+
+## Templates
+
+For each template below, use the project's copy at `docs/spec/templates/<file>` if there is one,
+because the team may have adapted it. If there isn't, use the copy in this skill's own folder,
+`templates/<file>`. Never write one of these documents from memory: the template is the format
+the other skills, and the next person to read it, expect.
+
+- `10-skill-audit-checklist.md` → `docs/spec/audits/[skill]-[date].md`, when the user audits a
+  new version before running it
 
 ## The one rule
 
@@ -74,8 +84,13 @@ unzip sdd-action-pack.zip
 cp -R sdd-action-pack/skills/spec-* [the skills directory from step 1]
 ```
 
-And the reminder that belongs with it: put the new version through Template 10 before running
-it. The version you read is the version you run.
+A skill's folder includes its `templates/`, so that copy updates the templates the skills carry.
+The project's own copies, in `docs/spec/templates/`, are the team's and may have been adapted, so
+they are not part of an update. If the release changed a template, name which ones, and leave
+updating `docs/spec/templates/` to the user.
+
+And the reminder that belongs with it: put the new version through the skill audit checklist,
+`10-skill-audit-checklist.md` (see Templates above), before running it. The version you read is the version you run.
 
 ### Step 4: Update, only when asked
 
@@ -86,7 +101,9 @@ Only if the user asks you to update, in this conversation:
 3. Ask which to replace. Replace only those folders, and only in the directory where each was
    found. Never touch a skill folder from any other publisher. A new skill the user asks for
    goes in the same directory as the others.
-4. Report what was replaced, from which version to which, and delete the temporary folder.
+4. Report what was replaced, from which version to which, and delete the temporary folder. A
+   skill's `templates/` folder is part of the skill and is replaced with it; nothing in the
+   project's `docs/spec/templates/` is touched.
 
 If an installed `SKILL.md` has been edited locally, the diff will show it. Point that out before
 replacing it, because replacing it throws those edits away.
